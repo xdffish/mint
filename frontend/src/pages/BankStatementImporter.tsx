@@ -166,27 +166,27 @@ const StatementInstructions = () => {
                 </TableHeader>
                 <TableBody>
                     <TableRow>
-                        <TableCell>Date/Transaction Date/Value Date</TableCell>
+                        <TableCell>{_("Date/Transaction Date/Value Date")}</TableCell>
                         <TableCell>{_("Date")}</TableCell>
                         <TableCell className="text-muted-foreground">{_("The date of the transaction")}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Amount</TableCell>
+                        <TableCell>{_("Amount")}</TableCell>
                         <TableCell>{_("Amount")}</TableCell>
                         <TableCell className="text-muted-foreground">{_('This can contain "CR"/"DR" values or positive/negative values. You could also have a separate column for CR/DR.')}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Withdrawal/Deposit</TableCell>
+                        <TableCell>{_("Withdrawal/Deposit")}</TableCell>
                         <TableCell>{_("Withdrawal")}/{_("Deposit")}</TableCell>
                         <TableCell className="text-muted-foreground">{_("The withdrawal or deposit amounts - only required if there's no amount column.")}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Description/Particulars/Remarks/Narration/Detail</TableCell>
+                        <TableCell>{_("Description/Particulars/Remarks/Narration/Detail")}</TableCell>
                         <TableCell>{_("Description")}</TableCell>
                         <TableCell className="text-muted-foreground">{_("The description of the transaction")}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Reference/Ref/Transaction ID/Cheque/Check</TableCell>
+                        <TableCell>{_("Reference/Ref/Transaction ID/Cheque/Check")}</TableCell>
                         <TableCell>{_("Reference")}</TableCell>
                         <TableCell className="text-muted-foreground">{_("The reference number of the transaction")}</TableCell>
                     </TableRow>
@@ -239,7 +239,7 @@ const StatementImportLog = () => {
                         {data?.map((item) => (
                             <TableRow key={item.name}>
                                 <TableCell>{formatDate(item.creation, 'Do MMM YYYY')}</TableCell>
-                                <TableCell>{formatDate(item.start_date, 'Do MMM YYYY')} to {formatDate(item.end_date, 'Do MMM YYYY')}</TableCell>
+                                <TableCell>{formatDate(item.start_date, 'Do MMM YYYY')} {_("to")} {formatDate(item.end_date, 'Do MMM YYYY')}</TableCell>
                                 <TableCell className="text-right">{item.number_of_transactions}</TableCell>
                                 <TableCell className="text-right font-mono">{formatCurrency(flt(item.closing_balance, 2))}</TableCell>
                                 <TableCell><a

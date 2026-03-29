@@ -180,7 +180,7 @@ const Row = ({ item, index, isLast, action }: { item: ActionLogItem, index: numb
                         <Separator orientation='vertical' />
                         <div className='flex items-center gap-2 text-muted-foreground text-sm' title={_("Transaction Date")}>
                             <CalendarIcon className='w-4 h-4' />
-                            <span className='text-sm'>{formatDate(item.bankTransaction.date, 'Do MMM YYYY')}</span>
+                            <span className='text-sm'>{formatDate(item.bankTransaction.date, 'YYYY年MM月DD日')}</span>
                         </div>
                         <Separator orientation='vertical' />
                         <div>
@@ -444,7 +444,7 @@ const CancelActionLogItem = ({ item, type, timestamp, bank }: { item: ActionLogI
                     </TableRow>
                     <TableRow>
                         <TableHead>{_("Posting Date")}</TableHead>
-                        <TableCell>{formatDate(item.voucher.posting_date, 'Do MMM YYYY')}</TableCell>
+                        <TableCell>{formatDate(item.voucher.posting_date, 'YYYY年MM月DD日')}</TableCell>
                     </TableRow>
                     {type === 'transfer' && item.voucher.doc && <TableRow>
                         <TableHead>{_("Transfer Account")}</TableHead>

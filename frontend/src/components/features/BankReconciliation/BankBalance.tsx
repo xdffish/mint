@@ -192,7 +192,7 @@ const ClosingBalanceAsPerStatement = () => {
 
                 </DialogContent>
             </Dialog>
-            {!isDateSame && data?.message.date && <span className="text-xs font-medium text-destructive">{_("As of {0}", [formatDate(data?.message?.date ?? '', 'Do MMM YYYY')])}</span>}
+            {!isDateSame && data?.message.date && <span className="text-xs font-medium text-destructive">{_("As of {0}", [formatDate(data?.message?.date ?? '', 'YYYY年MM月DD日')])}</span>}
         </div>
     </StatContainer>
 
@@ -244,14 +244,14 @@ const ClosingBalanceForm = ({ defaultBalance, date, bankAccount, onClose }: { de
             <DialogHeader>
                 <DialogTitle>{_("Set closing balance as per bank statement")}</DialogTitle>
                 <DialogDescription>
-                    {_("Enter the closing balance you see in your bank statement for {0} as of the {1}", [bankAccount?.account_name ?? bankAccount?.name ?? '', formatDate(date, 'Do MMM YYYY')])}
+                    {_("Enter the closing balance you see in your bank statement for {0} as of the {1}", [bankAccount?.account_name ?? bankAccount?.name ?? '', formatDate(date, 'YYYY年MM月DD日')])}
                 </DialogDescription>
             </DialogHeader>
             {error && <ErrorBanner error={error} />}
             <div className="py-4">
                 <CurrencyFormField
                     name="balance"
-                    label={_("Closing balance on bank statement as of {0}", [formatDate(date, 'Do MMM YYYY')])}
+                    label={_("Closing balance on bank statement as of {0}", [formatDate(date, 'YYYY年MM月DD日')])}
                     isRequired
                     currency={currency}
                 />
@@ -299,7 +299,7 @@ const ClosingBalancesList = ({ bankAccount, date }: { bankAccount: SelectedBank 
 
     return <div>
         <Separator className="my-8" />
-        <p className="text-sm text-center">{_("Balances as per bank statement before {0}", [formatDate(date, 'Do MMM YYYY')])}</p>
+        <p className="text-sm text-center">{_("Balances as per bank statement before {0}", [formatDate(date, 'YYYY年MM月DD日')])}</p>
         <Table>
             <TableHeader>
                 <TableRow>
@@ -311,7 +311,7 @@ const ClosingBalancesList = ({ bankAccount, date }: { bankAccount: SelectedBank 
             <TableBody>
                 {data?.map((item) => (
                     <TableRow key={item.name}>
-                        <TableCell>{formatDate(item.date, 'Do MMM YYYY')}</TableCell>
+                        <TableCell>{formatDate(item.date, 'YYYY年MM月DD日')}</TableCell>
                         <TableCell className="text-right">{formatCurrency(flt(item.balance, 2), bankAccount?.account_currency ?? getCompanyCurrency(bankAccount?.company ?? ''))}</TableCell>
                         <TableCell className="text-right">
                             <Button

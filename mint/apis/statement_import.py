@@ -189,7 +189,8 @@ def get_header_row_index(data: list[list[str]]):
             if not isinstance(cell, str):
                 continue
 
-            if any(keyword in cell.lower() for keyword in ["date", "amount", "description", "reference", "transaction", "type", "cr", "dr", "deposit", "withdrawal", "balance"]):
+            if any(keyword in cell.lower() for keyword in ["date", "amount", "description", "reference", "transaction", "type", "cr", "dr", "deposit", "withdrawal", "balance", 
+                                                           "日期", "金额", "发生额", "描述", "说明", "备注", "参考", "流水", "交易", "分录", "类型", "借", "贷", "存入", "支出", "收入", "余额"]):
                 valid_columns += 1
         if valid_columns > max_valid_columns:
             max_valid_columns = valid_columns
@@ -202,14 +203,14 @@ def get_column_mapping(header_row: list[str]):
     Given the header row, try to map each column index to a standard variable, or set it to "Do not import"
     """
     standard_variables = {
-        "Date": ["date", "transaction date"], 
-        "Amount": ["amount"], 
-        "Description": ["description", "particulars", "remarks", "narration", "detail", "reference"], 
-        "Reference": ["reference", "ref", "tran id", "transaction id", "cheque", "check", "id"], 
-        "Transaction Type": ["transaction type", "cr/dr", "dr/cr"], 
-        "Balance": ["balance"],
-        "Withdrawal": ["withdrawal", "debit"],
-        "Deposit": ["deposit", "credit"],
+        "Date": ["date", "transaction date", "交易日期", "日期"], 
+        "Transaction Type": ["transaction type", "cr/dr", "dr/cr", "交易类型", "借贷标识"], 
+        "Description": ["description", "particulars", "remarks", "narration", "detail", "reference", "对方账户名称", "附言", "描述", "备注", "摘要", "说明"], 
+        "Reference": ["reference", "ref", "tran id", "transaction id", "cheque", "check", "id", "业务流水号", "凭证号码", "发单方流水号", "柜员交易号", "发起方流水号", "参考", "流水"], 
+        "Balance": ["balance", "账户余额", "余额"],
+        "Withdrawal": ["withdrawal", "debit", "借方发生额", "支出", "借", "借方"],
+        "Deposit": ["deposit", "credit", "贷方发生额", "收入", "贷", "贷方", "存入"],
+        "Amount": ["amount", "发生额", "金额"], 
     }
 
     # A standard variable can be represented by multiple names
@@ -239,15 +240,22 @@ def get_column_mapping(header_row: list[str]):
             "maps_to": "Do not import",
         }
 
+        # Exact match first
         for standard_variable, names in standard_variables.items():
-            if any(name in cell.lower().replace(".", "") for name in names):
-
-                if not column_mapping.get(standard_variable, None):
+            if cell.lower().strip() in names:
+                if standard_variable not in column_mapping:
                     column["maps_to"] = standard_variable
-
                     column_mapping[standard_variable] = idx
-
                     break
+        
+        # If no exact match, try partial match
+        if column["maps_to"] == "Do not import":
+            for standard_variable, names in standard_variables.items():
+                if any(name in cell.lower().replace(".", "") for name in names):
+                    if standard_variable not in column_mapping:
+                        column["maps_to"] = standard_variable
+                        column_mapping[standard_variable] = idx
+                        break
         
         columns.append(column)
     
@@ -287,7 +295,7 @@ def get_transaction_rows(data: list[list[str]], header_index: int, column_mappin
         if not isinstance(date, str):
             continue
 
-        if not amount and not withdrawal and not deposit:
+        if amount is None and withdrawal is None and deposit is None:
             continue
 
         # Check if date column is a valid date
@@ -302,7 +310,7 @@ def get_transaction_rows(data: list[list[str]], header_index: int, column_mappin
         deposit = get_float_amount(deposit)
         balance = get_float_amount(balance)
             
-        if not amount and not withdrawal and not deposit:
+        if amount is None and withdrawal is None and deposit is None:
             continue
 
         if transaction_starting_index is None:
@@ -345,7 +353,7 @@ def get_transaction_rows(data: list[list[str]], header_index: int, column_mappin
 
 def get_float_amount(amount):
 
-    if not amount:
+    if amount is None or amount == "":
         return None
 
     if isinstance(amount, str):
@@ -404,9 +412,10 @@ def get_file_properties(transactions: list):
         
         # Check if there's a transaction type column containing "cr"/"dr"
         if transaction.get("transaction_type", None):
-            if "cr" in transaction.get("transaction_type", "").lower() or "dr" in transaction.get("transaction_type", "").lower():
+            t_type = transaction.get("transaction_type", "").lower()
+            if "cr" in t_type or "dr" in t_type or "借" in t_type or "贷" in t_type or "收" in t_type or "支" in t_type:
                 amount_format_frequency["cr_dr_in_transaction_type"] += 1
-            if "deposit" in transaction.get("transaction_type", "").lower() or "withdrawal" in transaction.get("transaction_type", "").lower():
+            if "deposit" in t_type or "withdrawal" in t_type:
                 amount_format_frequency["deposit_withdrawal_in_transaction_type"] += 1
         
         # Else assume that the amount is expressed as positive/negative value
@@ -494,7 +503,8 @@ def get_final_transactions(transactions: list, date_format: str, amount_format: 
         if amount_format == "cr_dr_in_transaction_type":
             transaction_type = transaction_row.get("transaction_type")
             amount = get_float_amount(transaction_row.get("amount", "0"))
-            if "cr" in transaction_type.lower():
+            t_type = transaction_type.lower() if transaction_type else ""
+            if "cr" in t_type or "贷" in t_type or "收" in t_type:
                 return 0, abs(amount)
             else:
                 return abs(amount), 0

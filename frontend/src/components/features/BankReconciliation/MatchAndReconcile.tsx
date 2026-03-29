@@ -233,7 +233,7 @@ const NoTransactionsFoundBanner = ({ text, description, onClearFilters }: { text
             {description && <EmptyDescription>{description}</EmptyDescription>}
         </EmptyHeader>
         <EmptyContent>
-            {onClearFilters ? <Button type='button' size='sm' variant='outline' onClick={onClearFilters}>Clear Filters</Button> :
+            {onClearFilters ? <Button type='button' size='sm' variant='outline' onClick={onClearFilters}>{_("Clear Filters")}</Button> :
                 <Button type='button' asChild size='sm' variant='outline'>
                     <Link to="/statement-importer">
                         {_("Import Bank Statement")}
@@ -390,7 +390,7 @@ const OptionsForMultipleTransactions = ({ transactions }: { transactions: Unreco
             <CardHeader>
                 <CardTitle>
                     <div className="flex items-center justify-between">
-                        <span className="text-lg">{transactions.length} {_(transactions.length === 1 ? _("transaction selected") : _("transactions selected"))}</span>
+                        <span className="text-lg">{transactions.length} {_(transactions.length === 1 ? "transaction selected" : "transactions selected")}</span>
                         <span className="text-lg font-semibold font-mono">
                             {formatCurrency(transactions.reduce((acc, transaction) => acc + (transaction.unallocated_amount ?? 0), 0), transactions[0].currency ?? '')}
                         </span>
@@ -706,7 +706,7 @@ const VouchersForTransaction = ({ transaction, contentHeight }: { transaction: U
         return <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Separator className="flex-1" />
-                <span>or</span>
+                <span>{_("or")}</span>
                 <Separator className="flex-1" />
             </div>
             <Skeleton className="h-16 w-full" />
@@ -721,7 +721,7 @@ const VouchersForTransaction = ({ transaction, contentHeight }: { transaction: U
     return <div className="relative space-y-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Separator className="flex-1" />
-            <span>or</span>
+            <span>{_("or")}</span>
             <Separator className="flex-1" />
         </div>
         {vouchers?.message.length === 0 && <Empty className="h-64 my-4">

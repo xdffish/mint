@@ -109,9 +109,9 @@ const BankRecDateFilter = () => {
                     return period.label;
                 }
             }
-            return "Date Range";
+            return _("Date Range");
         } else {
-            return "Date Range";
+            return _("Date Range");
         }
     }, [bankRecDate.fromDate, bankRecDate.toDate, timePeriodOptions]);
 
@@ -146,7 +146,7 @@ const BankRecDateFilter = () => {
             <PopoverContent className="w-84 p-0" align='start'>
                 <Command>
 
-                    <CommandInput placeholder="e.g. Last 3 weeks" onValueChange={setValue} value={value} />
+                    <CommandInput placeholder={_("e.g. Last 3 weeks")} onValueChange={setValue} value={value} />
                     <CommandList className='max-h-fit'>
                         <CommandEmpty className='text-left p-2 hover:bg-muted'>
                             <EmptyState onSelect={handleTimePeriodChange} value={value} />
@@ -262,7 +262,7 @@ const EmptyState = ({ onSelect, value }: { onSelect: (fromDate: string, toDate: 
                     </span>}
             </div> :
             <span className='text-sm text-muted-foreground'>
-                No results found
+                {_("No results found")}
             </span>
         }
     </div>

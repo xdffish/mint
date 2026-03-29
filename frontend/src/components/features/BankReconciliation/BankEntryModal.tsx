@@ -54,7 +54,7 @@ const RecordBankEntryModalContent = () => {
 
     if (!selectedTransaction || !selectedBankAccount) {
         return <div className='p-4'>
-            <span className='text-center'>No transaction selected</span>
+            <span className='text-center'>{_("No transaction selected")}</span>
         </div>
     }
 
